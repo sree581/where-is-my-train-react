@@ -32,32 +32,51 @@ export default function PNRStatus() {
     const [pnr, setPnr] = useState('');
     const [result, setResult] = useState(null);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    function handleBack() {
+        if (typeof navigate === 'function') {
+            navigate('/');
+        } else {
+            window.location.href = '/';
+        }
+    }
 
     function checkPNR(event) {
         event.preventDefault();
         setResult(null);
         setError('');
 
-        if (!/^\d{10}$/.test(pnr)) {
+        const trimmedPnr = pnr.trim();
+
+        if (!trimmedPnr) {
+            setError('Please enter a 10-digit PNR number.');
+            return;
+        }
+
+        if (!/^\d{10}$/.test(trimmedPnr)) {
             setError('Please enter a valid 10-digit PNR number.');
             return;
         }
 
-        const data = DUMMY_PNR_DATA[pnr];
+        setLoading(true);
 
-        if (!data) {
-            setError(
-                'No demo record found. Try 1234567890 or 9876543210.'
-            );
-            return;
-        }
+        // Simulate a brief lookup for responsive UX while retaining demo data
+        setTimeout(() => {
+            const data = DUMMY_PNR_DATA[trimmedPnr];
 
-        setResult(data);
+            if (!data) {
+                setError('No demo record found. Try 1234567890 or 9876543210.');
+            } else {
+                setResult(data);
+            }
+            setLoading(false);
+        }, 300);
     }
 
     return (
         <main className="pnr-page">
-            <button className="pnr-back" onClick={() => navigate('/')}>
+            <button type="button" className="pnr-back" onClick={handleBack}>
                 ← Back to Home
             </button>
 
@@ -73,34 +92,47 @@ export default function PNRStatus() {
                     maxLength={10}
                     placeholder="Enter 10-digit PNR"
                     value={pnr}
+                    disabled={loading}
                     onChange={(event) => {
-                        setPnr(event.target.value.replace(/\D/g, '').slice(0, 10));
+                        const cleanVal = event.target.value.replace(/\D/g, '').slice(0, 10);
+                        setPnr(cleanVal);
+                        if (error) setError('');
                     }}
                 />
-                <button type="submit">Check Status</button>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Checking Status...' : 'Check Status'}
+                </button>
             </form>
 
+            {loading && <p className="pnr-loading">Checking PNR status...</p>}
             {error && <p className="pnr-error">{error}</p>}
 
             {result && (
                 <section className="pnr-result">
                     <h2>Booking Details</h2>
-                    <p><strong>Train:</strong> {result.trainName}</p>
-                    <p><strong>Train Number:</strong> {result.trainNumber}</p>
-                    <p><strong>Journey Date:</strong> {result.journeyDate}</p>
-                    <p><strong>From:</strong> {result.from}</p>
-                    <p><strong>To:</strong> {result.to}</p>
+                    <p><strong>Train:</strong> {result.trainName || 'N/A'}</p>
+                    <p><strong>Train Number:</strong> {result.trainNumber || 'N/A'}</p>
+                    <p><strong>Journey Date:</strong> {result.journeyDate || 'N/A'}</p>
+                    <p><strong>From:</strong> {result.from || 'N/A'}</p>
+                    <p><strong>To:</strong> {result.to || 'N/A'}</p>
 
                     <h3>Passenger Details</h3>
 
-                    {result.passengers.map((passenger, index) => (
-                        <article className="pnr-passenger" key={index}>
-                            <p>{passenger.name}</p>
-                            <p>Booking Status: <strong>{passenger.booking}</strong></p>
-                            <p>Coach: {passenger.coach}</p>
-                            <p>Seat: {passenger.seat}</p>
-                        </article>
-                    ))}
+                    {Array.isArray(result.passengers) && result.passengers.length > 0 ? (
+                        result.passengers.map((passenger, index) => (
+                            <article
+                                className="pnr-passenger"
+                                key={passenger?.seat ? `${passenger.name || 'p'}-${passenger.coach || ''}-${passenger.seat}` : index}
+                            >
+                                <p>{passenger?.name || `Passenger ${index + 1}`}</p>
+                                <p>Booking Status: <strong>{passenger?.booking || 'N/A'}</strong></p>
+                                <p>Coach: {passenger?.coach || 'N/A'}</p>
+                                <p>Seat: {passenger?.seat || 'N/A'}</p>
+                            </article>
+                        ))
+                    ) : (
+                        <p className="pnr-demo">No passenger details available for this record.</p>
+                    )}
 
                     <p className="pnr-demo">
                         These are sample details for frontend demonstration only.
@@ -110,3 +142,4 @@ export default function PNRStatus() {
         </main>
     );
 }
+
