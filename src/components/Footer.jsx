@@ -21,7 +21,6 @@ function Footer() {
               <li><Link to="/pnr">PNR Status</Link></li>
               <li><Link to="/coach">Coach Position</Link></li>
               <li><Link to="/trains">Trains Between Stations</Link></li>
-              <li><Link to="/station">Live Station</Link></li>
             </ul>
           </div>
 

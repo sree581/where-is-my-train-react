@@ -194,7 +194,6 @@ export default function Home() {
               </Link>
             );
           })}
-          <Link to="/station/ERS" className="chip">Ernakulam Jn board</Link>
         </div>
       </section>
 
@@ -213,9 +212,8 @@ export default function Home() {
           <p>
             Ever asked yourself, <strong>Where is my train right now?</strong>{' '}
             Search by train number to see the running status station by
-            station, check which trains stop at a station in the next few
-            hours, find trains between two stations, look up your PNR and find
-            where your coach stops on the platform.
+            station, find trains between two stations, look up your PNR and
+            find where your coach stops on the platform.
           </p>
         </article>
 

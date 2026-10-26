@@ -1,7 +1,7 @@
 # Where Is My Train (React)
 
 A React + Vite clone of the *Where Is My Train* app: live running status,
-trains between stations, live station board, PNR status and coach position.
+trains between stations, PNR status and coach position.
 
 > Demo project. All timetables, running status, platforms, coach compositions
 > and PNR results are generated from sample data in `src/data/trains.js`.
@@ -14,7 +14,6 @@ trains between stations, live station board, PNR status and coach position.
 | `/` | Home | Search tabs for trains, live status, PNR and coach position |
 | `/trains?from=QLN&to=ERS&date=YYYY-MM-DD` | Find Trains | Trains between two stations, timings, duration, classes and running days |
 | `/live-status/:trainNumber` | Live Status | Station-by-station running status with delay, platform, progress and start-day picker; refreshes every 30 s |
-| `/station/:code` | Live Station | Trains arriving/departing at a station in the next 2–12 hours |
 | `/coach?train=12624&coach=B2&berth=12` | Coach Position | Coach order from the engine and full berth/seat maps for 1A, 2A, 3A, SL, CC and 2S |
 | `/pnr?pnr=1234567890` | PNR Status | Booking and current status per passenger, with links to coach and live status |
 | `/helpdesk` | Help Desk | Helplines and FAQ |
