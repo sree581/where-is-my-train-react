@@ -1,16 +1,50 @@
-# React + Vite
+# Where Is My Train (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A React + Vite clone of the *Where Is My Train* app: live running status,
+trains between stations, live station board, PNR status and coach position.
 
-Currently, two official plugins are available:
+> Demo project. All timetables, running status, platforms, coach compositions
+> and PNR results are generated from sample data in `src/data/trains.js`.
+> Nothing is fetched from Indian Railways / NTES.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+| Route | Page | What it does |
+| --- | --- | --- |
+| `/` | Home | Search tabs for trains, live status, PNR and coach position |
+| `/trains?from=QLN&to=ERS&date=YYYY-MM-DD` | Find Trains | Trains between two stations, timings, duration, classes and running days |
+| `/live-status/:trainNumber` | Live Status | Station-by-station running status with delay, platform, progress and start-day picker; refreshes every 30 s |
+| `/station/:code` | Live Station | Trains arriving/departing at a station in the next 2–12 hours |
+| `/coach?train=12624&coach=B2&berth=12` | Coach Position | Coach order from the engine and full berth/seat maps for 1A, 2A, 3A, SL, CC and 2S |
+| `/pnr?pnr=1234567890` | PNR Status | Booking and current status per passenger, with links to coach and live status |
+| `/helpdesk` | Help Desk | Helplines and FAQ |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Try PNRs `1234567890` and `9876543210`; any other 10-digit PNR returns a
+generated sample booking.
 
-## Expanding the Oxlint configuration
+## Project structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```
+src/
+  components/   Layout, Header, Footer and the shared station/train autocomplete
+  data/         trains.js - sample timetables and coach compositions
+  pages/        one component per route
+  styles/       global.css (tokens, nav, footer, inputs) + one file per page
+  utils/        stations.js, trains.js (search + live-status simulation),
+                coaches.js (berth layouts), pnr.js
+```
+
+## Running
+
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run build
+npm run lint
+```
+
+## Credits
+
+Built by merging the team's feature branches: React foundation & home page,
+train tracking (Rashmi), train list (Keerthana), coach position (Sana) and
+PNR status (Athira).
