@@ -1,0 +1,71 @@
+.pnr-page {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 24px;
+    color: #263238;
+}
+
+.pnr-page h1 {
+    color: #2962ff;
+    margin-top: 28px;
+}
+
+.pnr-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 450px;
+    margin: 25px 0;
+    padding: 24px;
+    background: white;
+    border: 1px solid #e0e6ef;
+    border-radius: 12px;
+}
+
+.pnr-form input {
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.pnr-form button,
+.pnr-back {
+    padding: 11px 16px;
+    background: #2962ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.pnr-result {
+    margin-top: 25px;
+    padding: 24px;
+    border: 1px solid #dce4f0;
+    border-radius: 12px;
+    background: white;
+}
+
+.pnr-passenger {
+    margin-top: 14px;
+    padding: 14px;
+    background: #f4f7fc;
+    border-radius: 8px;
+}
+
+.pnr-error {
+    color: #c62828;
+}
+
+.pnr-demo {
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    .pnr-page {
+        padding: 16px;
+    }
+}
