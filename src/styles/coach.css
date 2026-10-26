@@ -1,0 +1,368 @@
+
+* {
+  box-sizing: border-box;
+}
+
+.coach-page {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0 20px 30px;
+  background: #fff;
+  color: #252525;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.coach-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.back-button {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: #222;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 4px 5px;
+}
+
+.selected-heading {
+  min-width: 0;
+}
+
+.selected-heading h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #000;
+}
+
+.selected-heading p {
+  font-size: 12px;
+  color: #000;
+  margin: 0;
+}
+
+.train-details strong {
+  color: #222;
+}
+
+.train-details span {
+  color: #555;
+}
+
+
+.train-search-controls input {
+  width: 160px;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.train-search-controls button {
+  background: #1769e0;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.coach-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0 0;
+  overflow: hidden;
+}
+
+.engine-icon {
+  flex: 0 0 42px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.coach-scroller {
+  display: flex;
+  align-items: stretch;
+  gap: 9px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 2px 5px;
+  scrollbar-width: thin;
+  scrollbar-color: #aaa #f2f2f2;
+  scroll-behavior: smooth;
+}
+
+.coach-option {
+  flex: 0 0 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: #333;
+}
+
+.coach-option-name {
+  width: 100%;
+  min-height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 7px;
+  background: #f8f8f8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.coach-option.active .coach-option-name {
+  color: #fff;
+  background: #1976df;
+  border-color: #1976df;
+}
+
+.coach-position {
+  font-size: 10px;
+  color: #555;
+}
+
+.coach-warning {
+  border: 1px solid #ffc8c8;
+  background: #fffafa;
+  color: #b3261e;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin: 0 0 22px;
+  font-size: 12px;
+}
+
+.coach-warning strong {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.coach-warning p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.layout-section {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.layout-section h2 {
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.coach-interior {
+  position: relative;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 14px 12px 24px;
+  border: 1px solid #858585;
+  border-top: 2px solid #858585;
+  background: #fff;
+}
+
+.coach-door {
+  position: absolute;
+  top: -6px;
+  left: calc(50% - 24px);
+  width: 48px;
+  height: 8px;
+  border: 1px solid #aaa;
+  background: #fff;
+}
+
+.berth-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.berth-row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(75px, 0.8fr);
+  align-items: stretch;
+  gap: clamp(20px, 9vw, 60px);
+}
+
+.main-berths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-width: 0;
+  border-radius: 5px;
+  box-shadow: 5px 0 0 #eee, -5px 0 0 #eee;
+}
+
+.berth {
+  min-width: 0;
+  min-height: 78px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #d3d3d3;
+}
+
+.main-berths .berth:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.main-berths .berth:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.side-berths {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.side-berth {
+  min-height: 78px;
+  border-radius: 5px;
+  box-shadow: 5px 0 0 #eee, -5px 0 0 #eee;
+}
+
+.berth-number {
+  font-size: 17px;
+  color: #222;
+}
+
+.berth-label {
+  font-size: 9px;
+  color: #555;
+  text-align: center;
+}
+
+.general-compartment {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 55px 20px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.general-icon {
+  font-size: 42px;
+}
+
+.general-compartment h3 {
+  margin: 12px 0 8px;
+  font-size: 20px;
+}
+
+.general-compartment p {
+  color: #666;
+  font-size: 14px;
+}
+
+.demo-note {
+  text-align: center;
+  color: #888;
+  font-size: 11px;
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .coach-page {
+    padding: 0 10px 24px;
+  }
+
+  .coach-header {
+    gap: 8px;
+  }
+
+  
+.selected-heading h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 4px;
+}
+
+  
+.selected-heading p {
+  font-size: 12px;
+  color: #555;
+  margin: 0;
+}
+
+
+  .train-search-controls {
+    width: 100%;
+  }
+
+  .train-search-controls input {
+    flex: 1;
+    width: 0;
+  }
+
+  .coach-selector {
+    gap: 5px;
+  }
+
+  .engine-icon {
+    flex-basis: 30px;
+    font-size: 18px;
+  }
+
+  .coach-option {
+    flex-basis: 58px;
+  }
+
+  .coach-warning {
+    padding: 10px;
+  }
+
+  .coach-interior {
+    padding: 14px 8px 20px;
+  }
+
+  .berth-row {
+    grid-template-columns: minmax(0, 3fr) minmax(55px, 0.8fr);
+    gap: 18px;
+  }
+
+  .berth {
+    min-height: 65px;
+  }
+
+  .side-berth {
+    min-height: 65px;
+  }
+
+  .berth-number {
+    font-size: 15px;
+  }
+
+  .berth-label {
+    font-size: 8px;
+  }
+}
