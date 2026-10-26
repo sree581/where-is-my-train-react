@@ -1,8 +1,3 @@
-
-* {
-  box-sizing: border-box;
-}
-
 .coach-page {
   width: 100%;
   min-height: 100vh;
@@ -48,25 +43,7 @@
   margin: 0;
 }
 
-.train-details strong {
-  color: #222;
-}
-
-.train-details span {
-  color: #555;
-}
-
-
-.train-search-controls input {
-  width: 160px;
-  min-width: 0;
-  padding: 9px 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 12px;
-}
-
-.train-search-controls button {
+.train-search-controls > button {
   background: #1769e0;
   color: white;
   border: 0;
@@ -210,7 +187,7 @@
 
 .main-berths {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
   min-width: 0;
   border-radius: 5px;
   box-shadow: 5px 0 0 #eee, -5px 0 0 #eee;
@@ -283,13 +260,6 @@
   font-size: 14px;
 }
 
-.demo-note {
-  text-align: center;
-  color: #888;
-  font-size: 11px;
-  margin-top: 20px;
-}
-
 @media (max-width: 600px) {
   .coach-page {
     padding: 0 10px 24px;
@@ -299,30 +269,20 @@
     gap: 8px;
   }
 
-  
-.selected-heading h1 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #111;
-  margin: 0 0 4px;
-}
+  .selected-heading h1 {
+    font-size: 18px;
+  }
 
-  
-.selected-heading p {
-  font-size: 12px;
-  color: #555;
-  margin: 0;
-}
-
+  .coach-header {
+    flex-wrap: wrap;
+  }
 
   .train-search-controls {
     width: 100%;
+    margin: 0 0 10px;
   }
 
-  .train-search-controls input {
-    flex: 1;
-    width: 0;
-  }
+  
 
   .coach-selector {
     gap: 5px;
@@ -364,5 +324,98 @@
 
   .berth-label {
     font-size: 8px;
+  }
+}
+
+/* ===== Additions for the unified app ===== */
+.coach-page {
+  max-width: 1140px;
+  margin: 0 auto;
+  min-height: 60vh;
+}
+
+.selected-heading {
+  flex: 1;
+}
+
+.train-search-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(340px, 100%);
+}
+
+.train-search-controls .station-input-wrap {
+  height: 38px;
+}
+
+.train-search-controls > button {
+  height: 38px;
+}
+
+.coach-error {
+  margin: 10px 0 0;
+  color: #b3261e;
+  font-size: 13px;
+}
+
+.coach-warning {
+  margin-top: 16px;
+}
+
+.berth-row.seat-row {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+
+.berth-row.cabin-row {
+  position: relative;
+  grid-template-columns: 1fr;
+}
+
+.side-berths.seat-group {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  border-radius: 5px;
+  box-shadow: 5px 0 0 #eee, -5px 0 0 #eee;
+}
+
+.side-berths.seat-group .side-berth {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.seat-row .berth {
+  min-height: 56px;
+}
+
+.cabin-label {
+  position: absolute;
+  top: -16px;
+  left: 0;
+  color: #888;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.berth.berth-highlight {
+  background: #1976df;
+  border-color: #1976df;
+}
+
+.berth.berth-highlight .berth-number,
+.berth.berth-highlight .berth-label {
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .train-search-controls {
+    width: 100%;
+  }
+
+  .berth-row.seat-row {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 12px;
   }
 }

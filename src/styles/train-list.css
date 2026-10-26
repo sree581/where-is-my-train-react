@@ -1,4 +1,3 @@
-
 /* Train List page styles */
 .train-list-page {
   --rail-blue: #15356f;
@@ -23,16 +22,6 @@
   box-sizing: border-box;
 }
 
-#root:has(.train-list-page) {
-  width: 100%;
-  max-width: none;
-  min-height: 100vh;
-  margin: 0;
-  border: 0;
-  text-align: left;
-  display: block;
-}
-
 .train-list-page button,
 .train-list-page input {
   font: inherit;
@@ -42,93 +31,13 @@
   cursor: pointer;
 }
 
-/* Top navigation */
-.train-list-page .main-navigation {
-  min-height: 44px;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  gap: 26px;
-  background: var(--rail-blue);
-  color: #fff;
-}
-
-.train-list-page .nav-brand {
-  flex-shrink: 0;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.train-list-page .nav-links {
-  display: flex;
-  align-items: stretch;
-  flex-wrap: wrap;
-  gap: 4px;
-  min-height: 44px;
-}
-
-.train-list-page .nav-links a {
-  display: flex;
-  align-items: center;
-  padding: 11px 10px;
-  border-bottom: 3px solid transparent;
-  color: #fff;
-  text-decoration: none;
-  white-space: nowrap;
-  font-size: 14px;
-}
-
-.train-list-page .nav-links a:hover,
-.train-list-page .nav-links a.nav-active {
-  background: rgba(255, 255, 255, 0.08);
-  border-bottom-color: #fff;
-}
-
-/* White page header */
-.train-list-page .train-page-header {
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-}
-
-.train-list-page .train-header-inner {
-  max-width: 1240px;
-  min-height: 66px;
-  margin: 0 auto;
-  padding: 12px 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.train-list-page .train-header-inner h1 {
-  margin: 0;
-  color: #171717;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 27px;
-  font-weight: 700;
-  letter-spacing: 0;
-  line-height: 1.25;
-}
-
-.train-list-page .header-info {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  color: #53657e;
-  white-space: nowrap;
-}
-
-/* Main content */
 .train-list-page .train-page-container {
   max-width: 1180px;
+  min-height: 60vh;
   margin: 0 auto;
   padding: 22px 28px 40px;
 }
 
-/* Find Trains / Track Train tabs */
 .train-list-page .search-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -158,7 +67,6 @@
   font-weight: 700;
 }
 
-/* Station search panel */
 .train-list-page .search-panel {
   padding: 22px;
   border: 1px solid #e5e7eb;
@@ -169,73 +77,9 @@
 
 .train-list-page .station-search-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr) 170px auto;
   align-items: end;
   gap: 12px;
-}
-
-.train-list-page .station-field {
-  position: relative;
-  min-width: 0;
-}
-
-.train-list-page .station-field label {
-  display: block;
-  margin-bottom: 7px;
-  color: #252525;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.train-list-page .station-input-wrap {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 12px;
-  border: 1px solid #d4dbe5;
-  border-radius: 7px;
-  background: #fff;
-}
-
-.train-list-page .station-input-wrap:focus-within {
-  border-color: var(--action-blue);
-  box-shadow: 0 0 0 3px rgba(40, 100, 237, 0.1);
-}
-
-.train-list-page .station-pin {
-  flex-shrink: 0;
-  color: #687586;
-  font-size: 19px;
-}
-
-.train-list-page .station-input-wrap input {
-  width: 100%;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  outline: none;
-  background: transparent;
-  color: #202124;
-  font-size: 15px;
-}
-
-.train-list-page .station-input-wrap input::placeholder {
-  color: #9299a5;
-}
-
-.train-list-page .clear-btn {
-  flex-shrink: 0;
-  padding: 0 1px;
-  border: 0;
-  background: transparent;
-  color: #8b95a4;
-  font-size: 22px;
-  line-height: 1;
-}
-
-.train-list-page .clear-btn:hover {
-  color: #d33b48;
 }
 
 .train-list-page .swap-stations-btn {
@@ -267,61 +111,8 @@
   background: #174fce;
 }
 
-/* Station autocomplete */
-.train-list-page .station-suggestions {
-  position: absolute;
-  z-index: 20;
-  top: calc(100% + 5px);
-  right: 0;
-  left: 0;
-  overflow: hidden;
-  border: 1px solid #dce1e8;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 8px 20px rgba(20, 35, 60, 0.14);
-}
-
-.train-list-page .suggestion-option {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 13px;
-  border: 0;
-  border-bottom: 1px solid #edf0f4;
-  background: #fff;
-  color: #273244;
-  text-align: left;
-}
-
-.train-list-page .suggestion-option:last-child {
-  border-bottom: 0;
-}
-
-.train-list-page .suggestion-option:hover {
-  background: #f0f5ff;
-}
-
-.train-list-page .suggestion-option strong {
-  color: var(--action-blue);
-}
-
-.train-list-page .no-suggestions {
-  padding: 12px;
-  color: #737d8b;
-}
-
-/* Search results */
 .train-list-page .results-section {
   margin-top: 24px;
-}
-
-.train-list-page .sample-notice {
-  margin: 0 0 10px;
-  color: #bf7000;
-  text-align: center;
-  font-size: 16px;
 }
 
 .train-list-page .search-message {
@@ -483,17 +274,6 @@
   font-weight: 700;
 }
 
-.train-list-page .track-placeholder h2 {
-  margin: 0 0 10px;
-  color: #202124;
-  font-size: 23px;
-}
-
-.train-list-page .track-placeholder p {
-  margin-bottom: 18px;
-  color: #687586;
-}
-
 .train-list-page .demo-note {
   margin-top: 24px;
   color: #8992a0;
@@ -501,28 +281,13 @@
   font-size: 12px;
 }
 
-/* Smaller screens */
 @media (max-width: 900px) {
-  .train-list-page .main-navigation {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0;
-    padding: 12px 18px 0;
-  }
-
-  .train-list-page .nav-links {
-    width: 100%;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-  }
-
-  .train-list-page .nav-links a {
-    padding-right: 12px;
-    padding-left: 12px;
-  }
-
   .train-list-page .station-search-row {
     grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+  }
+
+  .train-list-page .date-field {
+    grid-column: 1 / -1;
   }
 
   .train-list-page .search-trains-btn {
@@ -532,17 +297,6 @@
 }
 
 @media (max-width: 600px) {
-  .train-list-page .train-header-inner {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
-    padding: 14px 16px;
-  }
-
-  .train-list-page .train-header-inner h1 {
-    font-size: 22px;
-  }
-
   .train-list-page .train-page-container {
     padding: 16px 12px 28px;
   }
@@ -552,7 +306,7 @@
   }
 
   .train-list-page .station-search-row {
-    grid-template-columns: minmax(0, 1fr) 40px;
+    grid-template-columns: 44px minmax(0, 1fr);
     gap: 12px 8px;
   }
 
@@ -560,14 +314,18 @@
     grid-column: 1 / -1;
   }
 
+  .train-list-page .date-field {
+    grid-row: 3;
+  }
+
   .train-list-page .swap-stations-btn {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 4;
   }
 
   .train-list-page .search-trains-btn {
     grid-column: 2;
-    grid-row: 3;
+    grid-row: 4;
     padding: 0 10px;
   }
 
@@ -601,5 +359,88 @@
   .train-list-page .train-card-footer {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+/* Additions for the unified app: date, classes, running days */
+.train-list-page .station-search-row.track-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.train-list-page .results-heading {
+  margin: 0 0 14px;
+  color: #202124;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.train-list-page .results-heading span {
+  color: var(--muted-text);
+  font-weight: 400;
+}
+
+.train-list-page .day-offset {
+  margin-left: 2px;
+  color: var(--muted-text);
+  font-size: 11px;
+}
+
+.train-list-page .train-classes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.train-list-page .class-chip {
+  padding: 2px 9px;
+  border: 1px solid #d6deea;
+  border-radius: 5px;
+  color: var(--rail-blue);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.train-list-page .runs-on {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.train-list-page .runs-on .day-on,
+.train-list-page .runs-on .day-off {
+  width: 18px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.train-list-page .runs-on .day-on {
+  color: var(--on-time);
+}
+
+.train-list-page .runs-on .day-off {
+  color: #c4cad3;
+}
+
+.train-list-page .train-card-links a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .train-list-page .station-search-row.track-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .train-list-page .track-row .search-trains-btn {
+    grid-column: auto;
+    width: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .train-list-page .track-row .station-field,
+  .train-list-page .track-row .search-trains-btn {
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
 }

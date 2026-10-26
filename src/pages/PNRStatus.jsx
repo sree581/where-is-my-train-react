@@ -1,50 +1,36 @@
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/pnr.css';
-
-const DUMMY_PNR_DATA = {
-    '1234567890': {
-        trainName: 'Venad Express',
-        trainNumber: '16301',
-        journeyDate: '25 October 2026',
-        from: 'Kollam Junction',
-        to: 'Ernakulam Junction',
-        passengers: [
-            { name: 'Passenger 1', booking: 'CNF', coach: 'S2', seat: '34' },
-            { name: 'Passenger 2', booking: 'CNF', coach: 'S2', seat: '35' },
-        ],
-    },
-    '9876543210': {
-        trainName: 'Maveli Express',
-        trainNumber: '16603',
-        journeyDate: '26 October 2026',
-        from: 'Kozhikode',
-        to: 'Ernakulam Junction',
-        passengers: [
-            { name: 'Passenger 1', booking: 'RAC', coach: 'S3', seat: '12' },
-        ],
-    },
-};
+import { lookupPNR } from '../utils/pnr';
+import { formatDate, formatDuration } from '../utils/trains';
 
 export default function PNRStatus() {
-    const navigate = useNavigate();
-    const [pnr, setPnr] = useState('');
-    const [result, setResult] = useState(null);
+    const [params, setParams] = useSearchParams();
+    const pnrParam = params.get('pnr') || '';
+    const [pnr, setPnr] = useState(pnrParam);
+    const [lookup, setLookup] = useState({ pnr: '', result: null });
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
 
-    function handleBack() {
-        if (typeof navigate === 'function') {
-            navigate('/');
-        } else {
-            window.location.href = '/';
-        }
-    }
+    const validParam = /^\d{10}$/.test(pnrParam);
+    const loading = validParam && lookup.pnr !== pnrParam;
+    const result = validParam && lookup.pnr === pnrParam ? lookup.result : null;
+
+    // Run the lookup whenever the PNR in the URL changes (form submit or a
+    // link from the home page).
+    useEffect(() => {
+        if (!validParam) return undefined;
+
+        // Simulate a brief lookup for responsive UX while retaining demo data
+        const timer = setTimeout(() => {
+            setLookup({ pnr: pnrParam, result: lookupPNR(pnrParam) });
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [pnrParam, validParam]);
 
     function checkPNR(event) {
         event.preventDefault();
-        setResult(null);
         setError('');
 
         const trimmedPnr = pnr.trim();
@@ -59,29 +45,13 @@ export default function PNRStatus() {
             return;
         }
 
-        setLoading(true);
-
-        // Simulate a brief lookup for responsive UX while retaining demo data
-        setTimeout(() => {
-            const data = DUMMY_PNR_DATA[trimmedPnr];
-
-            if (!data) {
-                setError('No demo record found. Try 1234567890 or 9876543210.');
-            } else {
-                setResult(data);
-            }
-            setLoading(false);
-        }, 300);
+        setParams({ pnr: trimmedPnr });
     }
 
     return (
         <main className="pnr-page">
-            <button type="button" className="pnr-back" onClick={handleBack}>
-                ← Back to Home
-            </button>
-
             <h1>PNR Status</h1>
-            <p>Enter your 10-digit PNR number to view sample booking details.</p>
+            <p>Enter your 10-digit PNR number to view booking and berth details.</p>
 
             <form className="pnr-form" onSubmit={checkPNR}>
                 <label htmlFor="pnr">PNR Number</label>
@@ -102,37 +72,74 @@ export default function PNRStatus() {
                 <button type="submit" disabled={loading}>
                     {loading ? 'Checking Status...' : 'Check Status'}
                 </button>
+                <p className="pnr-hint">Try 1234567890 or 9876543210.</p>
             </form>
 
             {loading && <p className="pnr-loading">Checking PNR status...</p>}
-            {error && <p className="pnr-error">{error}</p>}
+            {error && <p className="pnr-error" role="alert">{error}</p>}
 
             {result && (
                 <section className="pnr-result">
-                    <h2>Booking Details</h2>
-                    <p><strong>Train:</strong> {result.trainName || 'N/A'}</p>
-                    <p><strong>Train Number:</strong> {result.trainNumber || 'N/A'}</p>
-                    <p><strong>Journey Date:</strong> {result.journeyDate || 'N/A'}</p>
-                    <p><strong>From:</strong> {result.from || 'N/A'}</p>
-                    <p><strong>To:</strong> {result.to || 'N/A'}</p>
+                    <div className="pnr-result-head">
+                        <div>
+                            <span className="pnr-label">PNR {result.pnr}</span>
+                            <h2>
+                                {result.train.number} - {result.train.name}
+                            </h2>
+                        </div>
+                        <span className={`pnr-chart ${result.chartStatus === 'Chart Prepared' ? 'prepared' : ''}`}>
+                            {result.chartStatus}
+                        </span>
+                    </div>
+
+                    <div className="pnr-journey">
+                        <div>
+                            <strong>{result.fromStop.departure}</strong>
+                            <span>{result.fromStop.name} ({result.fromStop.code})</span>
+                        </div>
+                        <div className="pnr-journey-mid">
+                            {formatDuration(result.toStop.arrMin - result.fromStop.depMin)}
+                            <span>→</span>
+                        </div>
+                        <div>
+                            <strong>{result.toStop.arrival}</strong>
+                            <span>{result.toStop.name} ({result.toStop.code})</span>
+                        </div>
+                    </div>
+
+                    <div className="pnr-facts">
+                        <p><span>Journey Date</span>{formatDate(result.journeyDate)}</p>
+                        <p><span>Class</span>{result.classCode}</p>
+                        <p><span>Boarding</span>{result.fromStop.code} · PF {result.fromStop.platform}</p>
+                        <p><span>Quota</span>General</p>
+                    </div>
 
                     <h3>Passenger Details</h3>
 
-                    {Array.isArray(result.passengers) && result.passengers.length > 0 ? (
-                        result.passengers.map((passenger, index) => (
-                            <article
-                                className="pnr-passenger"
-                                key={passenger?.seat ? `${passenger.name || 'p'}-${passenger.coach || ''}-${passenger.seat}` : index}
-                            >
-                                <p>{passenger?.name || `Passenger ${index + 1}`}</p>
-                                <p>Booking Status: <strong>{passenger?.booking || 'N/A'}</strong></p>
-                                <p>Coach: {passenger?.coach || 'N/A'}</p>
-                                <p>Seat: {passenger?.seat || 'N/A'}</p>
-                            </article>
-                        ))
-                    ) : (
-                        <p className="pnr-demo">No passenger details available for this record.</p>
-                    )}
+                    {result.passengers.map((passenger, index) => (
+                        <article className="pnr-passenger" key={index}>
+                            <p className="pnr-passenger-name">{passenger.name}</p>
+                            <p>Booking Status: <strong>{passenger.bookingStatus}</strong></p>
+                            <p>
+                                Current Status:{' '}
+                                <strong className={passenger.confirmed ? 'status-cnf' : 'status-wait'}>
+                                    {passenger.currentStatus}
+                                </strong>
+                            </p>
+                            {passenger.confirmed && (
+                                <p>
+                                    Coach {passenger.coach} · Berth {passenger.berth} ({passenger.berthType}){' '}
+                                    <Link to={`/coach?train=${result.train.number}&coach=${passenger.coach}&berth=${passenger.berth}`}>
+                                        Find my coach →
+                                    </Link>
+                                </p>
+                            )}
+                        </article>
+                    ))}
+
+                    <p className="pnr-actions">
+                        <Link to={`/live-status/${result.train.number}`}>Live running status →</Link>
+                    </p>
 
                     <p className="pnr-demo">
                         These are sample details for frontend demonstration only.
@@ -142,4 +149,3 @@ export default function PNRStatus() {
         </main>
     );
 }
-

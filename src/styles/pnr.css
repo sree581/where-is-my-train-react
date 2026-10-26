@@ -1,13 +1,15 @@
 .pnr-page {
     max-width: 850px;
-    margin: 40px auto;
+    min-height: 60vh;
+    margin: 0 auto;
+    padding-top: 40px;
     padding: 24px;
     color: #263238;
 }
 
 .pnr-page h1 {
     color: #2962ff;
-    margin-top: 28px;
+    margin-bottom: 6px;
 }
 
 .pnr-form {
@@ -29,8 +31,7 @@
     font: inherit;
 }
 
-.pnr-form button,
-.pnr-back {
+.pnr-form button {
     padding: 11px 16px;
     background: #2962ff;
     color: white;
@@ -67,5 +68,145 @@
 @media (max-width: 600px) {
     .pnr-page {
         padding: 16px;
+    }
+}
+
+.pnr-form label {
+    font-weight: 700;
+}
+
+.pnr-form button:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.pnr-hint,
+.pnr-loading {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.pnr-result-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.pnr-result-head h2 {
+    color: #0f172a;
+    font-size: 20px;
+}
+
+.pnr-label {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.pnr-chart {
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #c2410c;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.pnr-chart.prepared {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pnr-journey {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0;
+    padding: 16px 0;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.pnr-journey > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.pnr-journey > div:last-child {
+    text-align: right;
+}
+
+.pnr-journey strong {
+    color: #0f172a;
+    font-size: 20px;
+}
+
+.pnr-journey span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.pnr-journey-mid {
+    align-items: center;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.pnr-facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.pnr-facts p {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+}
+
+.pnr-facts span {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.pnr-passenger-name {
+    font-weight: 700;
+}
+
+.pnr-passenger a,
+.pnr-actions a {
+    color: #2962ff;
+    font-weight: 700;
+}
+
+.pnr-actions {
+    margin-top: 18px;
+}
+
+.status-cnf {
+    color: #079447;
+}
+
+.status-wait {
+    color: #c2410c;
+}
+
+@media (max-width: 600px) {
+    .pnr-facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pnr-journey {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .pnr-journey-mid {
+        display: none !important;
     }
 }

@@ -1,110 +1,50 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../styles/home.css';
-import {
-  STATIONS,
-  resolveStationCode
-} from '../utils/stations';
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+import StationInput from '../components/StationInput';
+import TrainInput from '../components/TrainInput';
+import { resolveStationCode } from '../utils/stations';
+import { findTrain } from '../utils/trains';
 
 const TABS = [
-  { id: 'find-trains', label: 'Search Train' },
-  { id: 'pnr-status', label: 'PNR Status' },
-  { id: 'coach-position', label: 'Coach Position' }
+  { id: 'find-trains', label: '🔎 Find Trains' },
+  { id: 'live-status', label: '📍 Live Status' },
+  { id: 'pnr-status', label: '🎫 PNR Status' },
+  { id: 'coach-position', label: '🚃 Coach Position' }
 ];
 
-function StationInput({ label, value, onChange, placeholder }) {
-  const [focused, setFocused] = useState(false);
-
-  const matches = STATIONS.filter(station => {
-    const query = value.trim().toLowerCase();
-    return query && (
-      station.name.toLowerCase().includes(query) ||
-      station.code.toLowerCase().includes(query)
-    );
-  }).slice(0, 6);
-
-  return (
-    <div className="input-group">
-      <label>{label}</label>
-      <div className="input-wrapper" style={{ position: 'relative' }}>
-        <input
-          value={value}
-          placeholder={placeholder}
-          autoComplete="off"
-          onFocus={() => setFocused(true)}
-          onBlur={() => setTimeout(() => setFocused(false), 150)}
-          onChange={event => onChange(event.target.value)}
-        />
-        {focused && matches.length > 0 && (
-          <div
-            className="autocomplete-dropdown"
-            role="listbox"
-            style={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              right: 0,
-              zIndex: 20,
-              background: '#fff',
-              border: '1px solid #dee2e6',
-              borderRadius: 8
-            }}
-          >
-            {matches.map(station => (
-              <button
-                key={station.code}
-                type="button"
-                role="option"
-                onMouseDown={() =>
-                  onChange(`${station.name} (${station.code})`)
-                }
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  padding: 12,
-                  textAlign: 'left',
-                  background: '#fff'
-                }}
-              >
-                {station.name} ({station.code})
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+const POPULAR_TRAINS = ['16302', '16603', '12624', '12076'];
 
 export default function Home() {
   const navigate = useNavigate();
+  const { hash } = useLocation();
 
-  const [activeTab, setActiveTab] = useState('find-trains');
+  const initialTab = TABS.some(tab => `#${tab.id}` === hash)
+    ? hash.slice(1)
+    : 'find-trains';
+
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
+  const [trainQuery, setTrainQuery] = useState('');
   const [pnr, setPnr] = useState('');
-  const [train, setTrain] = useState('');
   const [message, setMessage] = useState('');
-  const [pnrResult, setPnrResult] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   function changeTab(tab) {
     setActiveTab(tab);
     setMessage('');
-    setPnrResult(null);
     window.history.replaceState(null, '', `#${tab}`);
   }
 
-  function searchTrains() {
+  function searchTrains(event) {
+    event.preventDefault();
+
     const fromCode = resolveStationCode(from);
     const toCode = resolveStationCode(to);
 
     if (!fromCode || !toCode) {
-      setMessage('Enter valid departure and destination station names or codes.');
+      setMessage('Choose valid departure and destination stations from the suggestions.');
       return;
     }
 
@@ -113,9 +53,7 @@ export default function Home() {
       return;
     }
 
-    navigate(
-      `/train-status?from=${encodeURIComponent(fromCode)}&to=${encodeURIComponent(toCode)}`
-    );
+    navigate(`/trains?from=${fromCode}&to=${toCode}`);
   }
 
   function swapStations() {
@@ -123,75 +61,38 @@ export default function Home() {
     setTo(from);
   }
 
-  async function searchPNR() {
-    const value = pnr.trim();
+  function searchTrain(event, path) {
+    event.preventDefault();
 
-    if (!/^\d{10}$/.test(value)) {
+    const train = findTrain(trainQuery);
+
+    if (!train) {
+      setMessage('Train not found. Pick a train from the suggestions.');
+      return;
+    }
+
+    navigate(path(train.number));
+  }
+
+  function searchPNR(event) {
+    event.preventDefault();
+
+    if (!/^\d{10}$/.test(pnr)) {
       setMessage('Enter a valid 10-digit PNR number.');
       return;
     }
 
-    setLoading(true);
-    setMessage('');
-    setPnrResult(null);
-
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/pnr/${encodeURIComponent(value)}`
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Unable to retrieve PNR status.');
-      }
-
-      setPnrResult(data);
-    } catch (error) {
-      setMessage(error.message || 'Unable to connect to the backend.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function searchCoach() {
-    const value = train.trim();
-
-    if (/^\d{5}$/.test(value)) {
-      navigate(`/stations?train=${encodeURIComponent(value)}`);
-      return;
-    }
-
-    setMessage(
-      'Enter a valid 5-digit train number. Train-name lookup can be connected next.'
-    );
+    navigate(`/pnr?pnr=${pnr}`);
   }
 
   return (
     <>
-      <header className="app-header">
-        <h1>🚆 Where Is My Train</h1>
-        <div className="header-actions" style={{ marginLeft: 'auto' }}>
-          <button
-            className="header-icon-btn"
-            title="Help Desk"
-            aria-label="Help Desk"
-            onClick={() => navigate('/helpdesk')}
-            style={{ color: '#fff' }}
-          >
-            ?
-          </button>
-        </div>
-      </header>
-
       <section className="search-section" id="search-section">
         <div className="search-tabs" role="tablist">
           {TABS.map(tab => (
             <button
               key={tab.id}
-              className={`search-tab ${
-                activeTab === tab.id ? 'active' : ''
-              }`}
+              className={`search-tab ${activeTab === tab.id ? 'active' : ''}`}
               role="tab"
               aria-selected={activeTab === tab.id}
               onClick={() => changeTab(tab.id)}
@@ -202,16 +103,12 @@ export default function Home() {
         </div>
 
         {activeTab === 'find-trains' && (
-          <div className="search-form active">
+          <form className="search-form active" onSubmit={searchTrains}>
             <div className="station-inputs">
-              <StationInput
-                label="From"
-                value={from}
-                onChange={setFrom}
-                placeholder="Station name or code (e.g. QLN)"
-              />
+              <StationInput id="home-from" label="From" value={from} onChange={setFrom} />
 
               <button
+                type="button"
                 className="swap-btn"
                 onClick={swapStations}
                 aria-label="Swap stations"
@@ -220,100 +117,92 @@ export default function Home() {
                 ⇅
               </button>
 
-              <StationInput
-                label="To"
-                value={to}
-                onChange={setTo}
-                placeholder="Station name or code (e.g. ERS)"
-              />
+              <StationInput id="home-to" label="To" value={to} onChange={setTo} />
 
-              <button className="search-btn" onClick={searchTrains}>
+              <button type="submit" className="search-btn">
                 Search
               </button>
             </div>
+          </form>
+        )}
 
-            <p style={{ textAlign: 'center', marginTop: 12 }}>
-              Know your train number?{' '}
-              <button
-                onClick={() => navigate('/train-status')}
-                style={{ color: '#1a73e8', fontWeight: 600 }}
-              >
-                Track live status
+        {activeTab === 'live-status' && (
+          <form
+            className="search-form active"
+            onSubmit={event => searchTrain(event, number => `/live-status/${number}`)}
+          >
+            <div className="pnr-input-row">
+              <TrainInput id="home-live" label="Train" value={trainQuery} onChange={setTrainQuery} />
+              <button type="submit" className="search-btn">
+                Track Train
               </button>
-            </p>
-          </div>
+            </div>
+          </form>
         )}
 
         {activeTab === 'pnr-status' && (
-          <div className="search-form active">
+          <form className="search-form active" onSubmit={searchPNR}>
             <div className="pnr-input-row">
               <div className="input-group">
-                <label>PNR Number</label>
+                <label htmlFor="home-pnr">PNR Number</label>
                 <div className="input-wrapper">
                   <input
+                    id="home-pnr"
                     value={pnr}
                     maxLength={10}
                     inputMode="numeric"
                     placeholder="Enter 10-digit PNR number"
-                    onChange={event =>
-                      setPnr(event.target.value.replace(/\D/g, ''))
-                    }
+                    onChange={event => setPnr(event.target.value.replace(/\D/g, ''))}
                   />
                 </div>
               </div>
 
-              <button
-                className="search-btn"
-                onClick={searchPNR}
-                disabled={loading}
-              >
-                {loading ? 'Searching...' : 'Search'}
+              <button type="submit" className="search-btn">
+                Check PNR
               </button>
             </div>
-
-            {pnrResult && (
-              <pre style={{ marginTop: 16, whiteSpace: 'pre-wrap' }}>
-                {JSON.stringify(pnrResult, null, 2)}
-              </pre>
-            )}
-          </div>
+          </form>
         )}
 
         {activeTab === 'coach-position' && (
-          <div className="search-form active">
+          <form
+            className="search-form active"
+            onSubmit={event => searchTrain(event, number => `/coach?train=${number}`)}
+          >
             <div className="pnr-input-row">
-              <div className="input-group">
-                <label>Train Number or Train Name</label>
-                <div className="input-wrapper">
-                  <input
-                    value={train}
-                    placeholder="Eg: 12625 or Kerala Express"
-                    onChange={event => setTrain(event.target.value)}
-                  />
-                </div>
-              </div>
-
-              <button className="search-btn" onClick={searchCoach}>
+              <TrainInput id="home-coach" label="Train" value={trainQuery} onChange={setTrainQuery} />
+              <button type="submit" className="search-btn">
                 View Coach &amp; Seat Layout
               </button>
             </div>
-          </div>
+          </form>
         )}
 
         {message && (
-          <p role="alert" style={{ color: '#c62828', marginTop: 12 }}>
+          <p className="form-error" role="alert">
             {message}
           </p>
         )}
+
+        <div className="quick-links">
+          <span>Popular:</span>
+          {POPULAR_TRAINS.map(number => {
+            const train = findTrain(number);
+            return (
+              <Link key={number} to={`/live-status/${number}`} className="chip">
+                {number} {train.name}
+              </Link>
+            );
+          })}
+          <Link to="/station/ERS" className="chip">Ernakulam Jn board</Link>
+        </div>
       </section>
 
       <main className="page-content">
         <article className="how-section" id="how-it-works">
           <div className="section-header">
             <div className="section-icon blue">i</div>
-            <h2>
-              How Where Is My Train Works – Your Complete Railway Companion
-            </h2>
+            <h2>How Where Is My Train Works – Your Complete Railway Companion</h2>
           </div>
           <p>
             Where is My Train is an online tool that lets you track your live
@@ -323,7 +212,10 @@ export default function Home() {
           </p>
           <p>
             Ever asked yourself, <strong>Where is my train right now?</strong>{' '}
-            Our project aims to make railway information easier to access.
+            Search by train number to see the running status station by
+            station, check which trains stop at a station in the next few
+            hours, find trains between two stations, look up your PNR and find
+            where your coach stops on the platform.
           </p>
         </article>
 
@@ -385,49 +277,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      <footer className="site-footer" id="site-footer">
-        <div className="footer-inner">
-          <div className="footer-grid">
-            <div className="footer-brand">
-              <a href="/" className="logo">🚆 Where Is My Train</a>
-              <p>
-                Track your train and access railway information through our
-                project.
-              </p>
-            </div>
-
-            <div className="footer-col">
-              <h4>Features</h4>
-              <ul>
-                <li><a href="/train-status">Live Train Status</a></li>
-                <li><a href="/#pnr-status">PNR Status</a></li>
-                <li><a href="/stations">Coach Position</a></li>
-                <li><a href="/train-status">Trains Between Stations</a></li>
-              </ul>
-            </div>
-
-            <div className="footer-col">
-              <h4>Company</h4>
-              <ul>
-                <li><a href="/helpdesk">Help Desk</a></li>
-              </ul>
-            </div>
-
-            <div className="footer-col">
-              <h4>Legal</h4>
-              <ul>
-                <li><a href="#site-footer">Privacy Policy</a></li>
-                <li><a href="#site-footer">Terms of Service</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="footer-bottom">
-            <span>© 2026 Where Is My Train. All rights reserved.</span>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }
