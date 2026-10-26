@@ -219,9 +219,7 @@ export default function LiveStatus() {
                         <div className="timeline-station">
                           <span className="timeline-dot" />
                           <div>
-                            <Link to={`/station/${stop.code}`} className="timeline-name">
-                              {stop.name}
-                            </Link>
+                            <span className="timeline-name">{stop.name}</span>
                             <span className="timeline-meta">
                               {stop.code} · {stop.km} km · PF {stop.platform} · Day {stop.day}
                             </span>

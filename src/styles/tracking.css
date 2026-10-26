@@ -376,8 +376,6 @@
   font-weight: 700;
 }
 
-.timeline-name:hover { color: #2563eb; }
-
 .timeline-stop.upcoming .timeline-name { color: #475569; }
 
 .timeline-meta {
@@ -430,72 +428,6 @@
   font-weight: 700;
 }
 
-/* ===== Live station board ===== */
-.station-board {
-  list-style: none;
-  margin-top: 20px;
-}
-
-.board-row {
-  display: grid;
-  grid-template-columns: minmax(0, 2.5fr) 1.2fr 0.6fr 1.2fr;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 4px;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
-}
-
-.board-row.departed { opacity: 0.55; }
-
-.board-train a {
-  display: block;
-  color: #0f172a;
-  font-weight: 600;
-}
-
-.board-train a:hover { color: #2563eb; }
-
-.board-train a strong {
-  margin-right: 4px;
-  color: #2563eb;
-}
-
-.board-train span,
-.board-times span,
-.board-platform span {
-  color: #64748b;
-  font-size: 12px;
-}
-
-.board-times {
-  display: flex;
-  flex-direction: column;
-}
-
-.board-times strong { color: #0f172a; }
-
-.board-platform {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.board-platform strong {
-  color: #2563eb;
-  font-size: 20px;
-  line-height: 1.1;
-}
-
-.board-status {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-}
-
-.board-status span { font-size: 12px; font-weight: 600; }
-
 @media (max-width: 640px) {
   .timeline-head { display: none; }
 
@@ -509,12 +441,4 @@
   .timeline-delay { padding-left: 31px; }
   .timeline-time + .timeline-time,
   .timeline-delay { padding-left: 0; }
-
-  .board-row {
-    grid-template-columns: 1fr auto;
-  }
-
-  .board-times { flex-direction: row; gap: 12px; }
-  .board-platform { grid-row: 1; grid-column: 2; }
-  .board-status { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; }
 }
